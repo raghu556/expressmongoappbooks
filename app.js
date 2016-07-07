@@ -5,9 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var db = require('./model/db');
 var mongoose = require('mongoose');
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var books = require('./routes/books');
+var books = require('./routes/index');
 
 var app = express();
 
@@ -28,9 +26,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/books', books)
+app.use('/', books);
 
 console.log("Added Routes");
 

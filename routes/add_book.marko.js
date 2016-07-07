@@ -6,10 +6,10 @@ function create(__helpers) {
       attr = __helpers.a;
 
   return function render(data, out) {
-    out.w('<!DOCTYPE html> <html><head><title>Time</title><link rel="stylesheet" href="/stylesheets/bootstrap.min.css"><script src="/javascripts/bootstrap.min.js"></script></head><body><div class="container"><br><ul class="nav nav-pills"><li role="presentation"><a href="/books">View list of Books</a></li></ul><h2 style="text-align: center">' +
+    out.w('<!DOCTYPE html> <html><head><title>Time</title><link rel="stylesheet" href="/stylesheets/bootstrap.min.css"><script src="/javascripts/bootstrap.min.js"></script></head><body><div class="container"><br><ul class="nav nav-pills"><li role="presentation"><a href="/">View list of Books</a></li></ul><h2 style="text-align: center">' +
       escapeXml(data.name) +
       '</h2><form method="post" enctype="application/x-www-form-urlencoded"' +
-      attr("action", data.flag == 'update' ?  ('/books/updateBook/'+data.id) : '/books/addBook') +
+      attr("action", data.flag == 'update' ?  ('/updateBook/'+data.id) : '/addBook') +
       '><fieldset class="form-group"><label for="booktitle">Book Title</label><input type="text" class="form-control" name="title" id="title" placeholder="Enter Book Title"' +
       attr("value", data.flag == 'update' ?  data.title : '') +
       '></fieldset><fieldset class="form-group"><label for="author">Author</label><input type="text" class="form-control" id="author" name="author" placeholder="Enter Book Author"' +

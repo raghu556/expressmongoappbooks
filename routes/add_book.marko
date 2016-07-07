@@ -9,12 +9,12 @@
 		<div class="container">
 			<br>
 			<ul class="nav nav-pills">
-			  <li role="presentation"><a href="/books">View list of Books</a></li>
+			  <li role="presentation"><a href="/">View list of Books</a></li>
 			</ul>
 
 			<h2 style="text-align: center">${data.name}</h2>
 
-			<form  method="post" enctype="application/x-www-form-urlencoded" action="${data.flag == 'update' ?  '/books/updateBook/$data.id' : '/books/addBook'}">
+			<form  method="post" enctype="application/x-www-form-urlencoded" action="${data.flag == 'update' ?  '/updateBook/$data.id' : '/addBook'}">
 			  <fieldset class="form-group">
 			    <label for="booktitle">Book Title</label>
 			    <input type="text" class="form-control" name="title" id="title" placeholder="Enter Book Title" value="${data.flag == 'update' ?  data.title : ''}">
