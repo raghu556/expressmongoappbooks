@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Time</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		
+		<div class="container">
+			<br>
+			<ul class="nav nav-pills">
+			  <li role="presentation"><a href="/books">Back</a></li>
+			</ul>
+			<hr>	
+			<h2 style="text-align: center">Reviews for ${data.title}</h2>
+			<div class="panel panel-primary">
+			  <!-- List group -->
+			  <ul class="list-group" for="review in data.reviews">
+			    <li class="list-group-item">
+			    	Reviewer Name: $review.reviewername <br>
+			    	Message: $review.comment<br>
+			    	Rating: $review.rating
+			    </li>
+			  </ul>
+
+			</div>
+		</div>
+	</body>
+</html>

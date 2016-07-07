@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Time</title>
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+	</head>
+	<body>
+		
+		<div class="container">
+			<br>
+			<ul class="nav nav-pills">
+			  <li role="presentation"><a href="/books">Back</a></li>
+			</ul>
+			<hr>	
+			<h2 style="text-align: center">Search</h2>
+			<form  method="post" enctype="application/x-www-form-urlencoded" action="/books/search">
+			<div class="panel panel-primary">
+				<div id="custom-search-input">
+	                <div class="input-group col-md-12">
+	                    <input type="text" class="form-control input-lg" name="searchText" placeholder="Search Books by Name" />
+	                    <span class="input-group-btn">
+	                        <button class="btn btn-info btn-lg" type="submit">
+	                            <i class="glyphicon glyphicon-search"></i>
+	                        </button>
+	                    </span>
+	                </div>
+            </div>
+			</div>
+			</form>
+
+			<br>
+			<hr>
+			<div if="notEmpty(data.searchData)">
+			<h2 style="text-align: center">Searched Results</h2>
+			<div class="panel panel-primary" for="book in data.searchData">
+				
+			  <!-- Default panel contents -->
+			  <div class="panel-heading">$book.title</div>
+			  <div class="panel-body">
+			    <p>	Author: $book.author
+			    	<br>ISBN : $book.isbn
+			    	<br>Price: $book.price
+			    	<br>Average :$book.avgrating
+			    </p>
+			  </div>
+
+			</div>
+			</div>
+
+		</div>
+	</body>
+</html>
