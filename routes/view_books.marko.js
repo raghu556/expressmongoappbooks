@@ -7,7 +7,7 @@ function create(__helpers) {
       escapeXmlAttr = __helpers.xa;
 
   return function render(data, out) {
-    out.w('<!DOCTYPE html> <html><head><title>Time</title><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script></head><body><div class="container"><br><ul class="nav nav-pills"><li role="presentation"><a href="/books/addBook">Add New Book</a></li><li role="presentation"><a href="/books/search">Search Book</a></li></ul><hr> <h2 style="text-align: center">List of Books</h2>');
+    out.w('<!DOCTYPE html> <html><head><title>Time</title><link rel="stylesheet" href="/stylesheets/bootstrap.min.css"><script src="/javascripts/bootstrap.min.js"></script></head><body><div class="container"><br><ul class="nav nav-pills"><li role="presentation"><a href="/books/addBook">Add New Book</a></li><li role="presentation"><a href="/books/search">Search Book</a></li></ul><hr> <h2 style="text-align: center">List of Books</h2>');
 
     forEach(data.booksData, function(book) {
       if (notEmpty(data.booksData)) {

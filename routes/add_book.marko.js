@@ -6,7 +6,7 @@ function create(__helpers) {
       attr = __helpers.a;
 
   return function render(data, out) {
-    out.w('<!DOCTYPE html> <html><head><title>Time</title><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"><script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script></head><body><div class="container"><br><ul class="nav nav-pills"><li role="presentation"><a href="/books">View list of Books</a></li></ul><h2 style="text-align: center">' +
+    out.w('<!DOCTYPE html> <html><head><title>Time</title><link rel="stylesheet" href="/stylesheets/bootstrap.min.css"><script src="/javascripts/bootstrap.min.js"></script></head><body><div class="container"><br><ul class="nav nav-pills"><li role="presentation"><a href="/books">View list of Books</a></li></ul><h2 style="text-align: center">' +
       escapeXml(data.name) +
       '</h2><form method="post" enctype="application/x-www-form-urlencoded"' +
       attr("action", data.flag == 'update' ?  ('/books/updateBook/'+data.id) : '/books/addBook') +
