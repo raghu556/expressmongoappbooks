@@ -1,0 +1,6 @@
+#exclude .js marko files
+routes/add_book.marko.js
+routes/add_reviews.marko.js
+routes/search_books.marko.js
+routes/view_books.marko.js
+routes/view_reviews.marko.js
