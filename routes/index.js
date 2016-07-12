@@ -3,7 +3,8 @@ var router = express.Router();
 var mongoose = require('mongoose'); //mongo connection
 var bodyParser = require('body-parser'); //parses information from POST
 
-router.use(bodyParser.urlencoded({ extended: true }))
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
 
 var viewBooks = require('marko').load(require.resolve('./view_books.marko'));
 var addBook = require('marko').load(require.resolve('./add_book.marko'));
@@ -19,12 +20,37 @@ router.route('/')
 				return console.error(err);
 			}
 			else{
+				var userRating = userAvgRating(err, books);
 				viewBooks.render({
 		            name: 'Books List',
-		            booksData: books
+		            booksData: books,
+		            userRating: userRating
 		        }, res);
 			}
 		});
+
+		function userAvgRating(err, book){
+			var ratings = [];
+			for(var i=0; i<book.length; i++)
+			{
+				if(book[i]['reviews'] != "")
+				{
+					var reviews = book[i]['reviews'];
+					var userRating = 0;
+					for(var j=0; j<reviews.length;j++)
+					{
+						userRating = userRating + parseInt(reviews[j]['rating']);
+					}
+					userRating = (userRating/parseInt(book[i]['reviews'].length));
+					ratings.push(userRating);
+				}
+				else{
+					ratings.push("No Reviews");
+				}
+				
+			}
+			return ratings;
+		}
 	})
 
 router.route('/addBook')
@@ -50,9 +76,8 @@ router.route('/addBook')
 		var isbn = req.body.isbn;
 		var price = req.body.price;
 		var reviews_list = "";//req.body.reviews;
-		var avgrating = req.body.avgrating;
+		//var avgrating = req.body.avgrating;
 		//console.log(req);
-		console.log(req.body);
 		//console.log(reviews_list);
 		mongoose.model('Books').create({
 			title: title,
@@ -119,14 +144,14 @@ router.route('/addreviews/:id')
 				
 				book.reviews.push({reviewername: name,comment: comment, rating: rating});
 				
-				var userRating = 0;
-				for (var i=0; i<book.reviews.length;i++)
-				{
-					userRating = userRating + parseInt(book.reviews[i].rating);
-				}
-				userRating = (userRating/parseInt(book.reviews.length));
-				book.avgrating = userRating;
-				console.log("Avg Rating" + userRating);
+				//var userRating = 0;
+				//for (var i=0; i<book.reviews.length;i++)
+				//{
+					//userRating = userRating + parseInt(book.reviews[i].rating);
+				//}
+				//userRating = (userRating/parseInt(book.reviews.length));
+				//book.avgrating = userRating;
+				//console.log("Avg Rating" + userRating);
 				book.save(function (err) {
 	  				if (!err){ 
 						res.redirect("/");
@@ -200,7 +225,7 @@ router.route('/delete/:id')
 						})
 					}
 					else{
-						res.redirect("/books");
+						res.redirect("/");
 						console.log({"Message": "book deleted"})
 					}
 				})
@@ -215,6 +240,7 @@ router.route('/updateBook/:id')
 				return console.error(err);
 			}
 			else{
+				console.log("Get Data" + book);
 				addBook.render({
 		            flag: 'update',
 		            id: req.params.id,
@@ -231,7 +257,10 @@ router.route('/updateBook/:id')
 		var author = req.body.author;
 		var isbn = req.body.isbn;
 		var price = req.body.price;
+		console.log("Request Params Data" + req.params.id);
 		mongoose.model('Books').findById(req.params.id, function(err, book){
+			console.log("====================================================================");
+			console.log("Post Data" + book);
 			if(err){
 				res.status = 200
 				res.format({
@@ -241,12 +270,12 @@ router.route('/updateBook/:id')
 				})
 			}
 			else{
-				mongoose.model('Books').update({
-					title: title,
-					author: author,
-					isbn: isbn,
-					price: price
-				}, function(err, book){
+				book.title = title;
+				book.author = author;
+				book.isbn = isbn;
+				book.price = price;
+
+				book.save(function(err){
 					if(err){
 						res.send("There was an error when adding the information to the database!");
 					}
@@ -260,7 +289,7 @@ router.route('/updateBook/:id')
 
 router.route('/search')
 	.get(function(req, res, next){
-			mongoose.model('Books').find({}, function(err, books){
+			mongoose.model('Books').find({}).sort('price').exec(function(err, books){
 				if(err){
 					return console.error(err);
 				}
@@ -273,7 +302,79 @@ router.route('/search')
 		})
 	.post(function(req, res){
 		var searchQuery = req.body.searchText;
-		mongoose.model('Books').find({'title' : searchQuery}, function(err, book){
+		var searchCriteria = req.body.searchCriteria;
+		if(searchCriteria == 'title')
+		{
+			mongoose.model('Books').find({'title' : searchQuery}, function(err, book){
+				searchResults(book, err);
+			});
+		}
+		else if(searchCriteria == 'author')
+		{
+			mongoose.model('Books').find({'author' : searchQuery}, function(err, book){
+				searchResults(book, err);
+			});
+		}
+		else if(searchCriteria == 'isbn')
+		{
+			mongoose.model('Books').find({'isbn' : searchQuery}, function(err, book){
+				searchResults(book, err);
+			});
+		}
+		else if(searchCriteria == 'price')
+		{
+			mongoose.model('Books').find({'price' : searchQuery}, function(err, book){
+				searchResults(book, err);
+			});
+		}
+		else if(searchCriteria == 'avgrating')
+		{
+			mongoose.model('Books').find('reviews', function(err, book){
+				searchByRating(err, book)
+			});
+		}
+
+		function searchByRating(err, book){
+			for(var i=0; i<book.length; i++)
+			{
+				if(book[i]['reviews'] != "")
+				{
+					var reviews = book[i]['reviews'];
+					var userRating = 0;
+					for(var j=0; j<reviews.length;j++)
+					{
+						userRating = userRating + parseInt(reviews[j]['rating']);
+					}
+					userRating = (userRating/parseInt(book[i]['reviews'].length));
+					searchResults(book[i], err);
+				}		
+			}
+		}
+
+		function userAvgRating(err, book){
+			var ratings = [];
+			for(var i=0; i<book.length; i++)
+			{
+				if(book[i]['reviews'] != "")
+				{
+					var reviews = book[i]['reviews'];
+					var userRating = 0;
+					for(var j=0; j<reviews.length;j++)
+					{
+						userRating = userRating + parseInt(reviews[j]['rating']);
+					}
+					userRating = (userRating/parseInt(book[i]['reviews'].length));
+					ratings.push(userRating);
+				}
+				else{
+					ratings.push("No Reviews");
+				}
+				
+			}
+			return ratings;
+		}
+
+		function searchResults(book, err){
 			if(err){
 				res.status = 200
 				res.format({
@@ -283,11 +384,15 @@ router.route('/search')
 				})
 			}
 			else{
+				//console.log(book);
+				var userRating = userAvgRating(err, book);
 				search_books.render({
-		            searchData: book
+		            searchData: book,
+		            userRating: userRating
 		        }, res);
 			}
-		})
+		}
+		
 	})
 
 module.exports = router;

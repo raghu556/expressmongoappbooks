@@ -15,14 +15,15 @@
 			</ul>
 			<hr>	
 			<h2 style="text-align: center">List of Books</h2>
-			<div class="panel panel-primary" if="notEmpty(data.booksData)" for="book in data.booksData">
+			<div class="panel panel-primary" if="notEmpty(data.booksData)" for="book in data.booksData ; status-var=loop">
 			  <!-- Default panel contents -->
 			  <div class="panel-heading">$book.title</div>
 			  <div class="panel-body">
+			  	<var name="index" value="loop.getIndex()" />
 			    <p>	Author: $book.author
 			    	<br>ISBN : $book.isbn
 			    	<br>Price: $book.price
-			    	<br>Average :$book.avgrating
+			    	<br>Average Rating: ${data.userRating[index]}
 			    </p>
 				
 				<form method="get" style="display:inline-block" enctype="application/x-www-form-urlencoded" action="/viewreviews/$book.id"><input type="Submit" value="View Reviews" /></form> 

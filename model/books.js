@@ -10,7 +10,6 @@ var booksSchema = new mongoose.Schema({
   author: String,
   isbn: String,
   price: Number,
-  avgrating: Number,
   reviews: [reviewsSchema]
 });
 mongoose.model('Books', booksSchema);
